@@ -15,7 +15,6 @@ app.add_middleware(
 )
 
 # Configuration
-MODEL_PATH = "model/mobilenet_food.pth"
 
 @app.get("/")
 def health_check():
@@ -32,14 +31,7 @@ async def predict(file: UploadFile = File(...)):
     try:
         contents = await file.read()
         
-        # Check if model exists before running
-        if not os.path.exists(MODEL_PATH):
-             return {
-                 "error": "Model file not found. Please place 'mobilenet_food.pth' in backend/model/",
-                 "status": "failed"
-             }
-
-        result = predict_food(contents, MODEL_PATH)
+        result = predict_food(contents)
         
         # Flattening structure to match requested output format exactly
         response = {
